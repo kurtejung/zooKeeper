@@ -19,4 +19,6 @@ placeholder <- tab -> ItemD </br>
 The current keywords are listed in <a href=https://github.com/kurtejung/zooKeeper/blob/master/drawZoo.C#L46>Line 46 of drawZoo.C</a>, however they are also listed here for convienience:
 "HadronRAA", "HadronRpA", "InclJetRpA", "InclJetRAA", "BJetRAA", "PhotonRAA", "ZRAA", "WRAA", "BJpsiRAA", "BMesonRpA", "BJetRpA", "CJetRpA"
 
+Finally, objects are drawn in the order of the input file, so the plots at the "back" of the figure should be first in the input file column, and vice-versa.
+
 To add additional RpA or RAA data, please contact me
