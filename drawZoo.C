@@ -41,9 +41,9 @@
 #include "TLine.h"
 
 using namespace std;
-const int nObjects = 12;
+const int nObjects = 13;
 //keywords for input list
-const string objectsToPlot[nObjects] = {"HadronRAA", "HadronRpA", "InclJetRpA", "InclJetRAA", "BJetRAA", "PhotonRAA", "ZRAA", "WRAA", "BJpsiRAA", "BMesonRpA", "BJetRpA", "CJetRpA"};
+const string objectsToPlot[nObjects] = {"HadronRAA", "HadronRpA", "InclJetRpA", "InclJetRAA", "BJetRAA", "PhotonRAA", "ZRpA", "WRAA", "BJpsiRAA", "BMesonRpA", "BJetRpA", "CJetRpA", "ZRAA"};
 
 
 //**********************  USER PARAMETERS ******************************//
@@ -286,31 +286,24 @@ void drawZoo(){
   runPeriod[2] = 2;
 
   //----------------------------------------- jet RAA
-  double ptBins_jet[]   = {105,115,125,135,145,155,165,175,190,220,270}; 
-  double ptError_jet[]  = {0.0, 0.0, 0.0, 0.0, 0.0,0,0,0,0,0,0};
-  
-  double raa_jet[]      = {0.47,   0.47,   0.46,  0.44,   0.43,  0.47,  0.52,  0.51,  0.44,  0.42,  0.58}; 
-  double raaStat_jet[]  = {0.0076, 0.0098, 0.013, 0.016,  0.021, 0.028, 0.038, 0.045, 0.035, 0.039, 0.098};
-  double raaSyst_jet[]  = {0.07, 0.07, 0.08, 0.09, 0.08, 0.08, 0.08, 0.08, 0.07, 0.07, 0.10 };
 
-  double ptSystXlow_jet[]      = {5, 5, 5, 5, 5,5,5,5,10,20,30};
-  double ptSystXhigh_jet[]     = {5, 5, 5, 5, 5,5,5,5,10,20,30};
-  
-  TGraphErrors *pgRaa_jet          = new TGraphErrors(11, ptBins_jet, raa_jet, ptError_jet, raaStat_jet);
-  TGraphAsymmErrors *pgRaaSyst_jet = new TGraphAsymmErrors(11, ptBins_jet, raa_jet, ptSystXlow_jet,ptSystXhigh_jet,raaSyst_jet,raaSyst_jet);
+  TFile *jetRAAFile = new TFile("JetRAA_datapoints.root");
+  TGraphAsymmErrors *pgRaa_jet = (TGraphAsymmErrors*)jetRAAFile->Get("RAA_R3_staterr_cent0");
+  TGraphAsymmErrors *pgRaaSyst_jet = (TGraphAsymmErrors*)jetRAAFile->Get("RAA_R3_syserr_cent0");
   pgRaa_jet->SetName("pgRaa_jet");
   pgRaa_jet->SetMarkerStyle(33);
   pgRaa_jet->SetMarkerSize(1.4);
 
-  plots[3] = new TGraphErrors(*pgRaa_jet);
+  plots[3] = new TGraphErrors(pgRaa_jet->GetN(), pgRaa_jet->GetX(), pgRaa_jet->GetY(), pgRaa_jet->GetEX(), pgRaa_jet->GetEY());
   
   //systm error
   pgRaaSyst_jet->SetName("pgRaaSyst_jet");
+  pgRaaSyst_jet->SetFillStyle(1001);
   pgRaaSyst_jet->SetFillColor(TColor::GetColor("#00FF60"));
 
   systUnc[3] = new TGraphAsymmErrors(*pgRaaSyst_jet);
   systUnc[3]->SetTitle("Inclusive jet  R_{AA}  (0-5%)  |#eta| < 2");
-  isPrelim[3] = true;
+  //isPrelim[3] = true;
   runPeriod[3] = 1;
 
 
@@ -369,39 +362,32 @@ void drawZoo(){
   systUnc[5]->SetTitle("Isolated photon  (0-10%)  |#eta| < 1.44");
 
   runPeriod[5] = 1;
-  
-  //----------------------------------------- Z 
-  //double ptBins_z[]   = {91.19};
-  double ptBins_z[7]   = {2.5,7.5,15,25,35,45,75};
-  //double ptError_z[]  = {0.0};
-  double ptError_z[7]  = {0.0};
-  
-  //double raa_z[]      = {1.06}; 
-  //double raaStat_z[]  = {0.05};
-  //double raaSyst_z[]  = {0.08};
-  //double ptSystXlow_z[]      = {4};
-  //double ptSystXhigh_z[]     = {4};
-  double raa_z[7]        = {0.88,1.20,1.00,1.35,1.11,1.35,0.78}; 
-  double raaStat_z[7]    = {0.09,0.13,0.11,0.22,0.27,0.42,0.20};
-  double raaSyst_z[7]    = {0.06,0.08,0.07,0.09,0.08,0.09,0.05};
-  double ptSystXlow_z[7] = {2.5,2.5,5,5,5,5,25};
-  double ptSystXhigh_z[7] = {2.5,2.5,5,5,5,5,25};
 
-  TGraphErrors *pgRaa_z          = new TGraphErrors(7, ptBins_z, raa_z, ptError_z, raaStat_z);
-  TGraphAsymmErrors *pgRaaSyst_z = new TGraphAsymmErrors(7, ptBins_z, raa_z, ptSystXlow_z,ptSystXhigh_z,raaSyst_z,raaSyst_z);
-  pgRaa_z->SetName("pgRaa_z");   pgRaa_z->SetMarkerStyle(kFullCircle);
-  pgRaa_z->SetMarkerSize(1.);
-  pgRaa_z->SetMarkerStyle(22);
 
-  plots[6] = new TGraphErrors(*pgRaa_z);
+  //----------------------------------------- Z RpA (arXiv: 1512.06461v2)
+  double ptBins_zpPb[13]   = {1.25,3.75, 6.25, 8.75, 11.25, 13.75, 17.5, 25., 35., 45., 60., 85., 125.};
+  double ptError_zpPb[13]  = {0.0};
+  
+  double raa_zpPb[13]        = {0}; //PLACEHOLDERS - RATIO/POWHEG IS NOT ON HEPDATA!!
+  double raaStat_zpPb[13]    = {0};
+  double raaSyst_zpPb[13]    = {0};
+  double ptSystXlow_zpPb[13] = {1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 2.5, 5, 5, 5, 10, 15, 25};
+  double ptSystXhigh_zpPb[13] = {1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 2.5, 5, 5, 5, 10, 15, 25};
+
+  TGraphErrors *pgRpa_z          = new TGraphErrors(13, ptBins_zpPb, raa_zpPb, ptError_zpPb, raaStat_zpPb);
+  TGraphAsymmErrors *pgRpaSyst_z = new TGraphAsymmErrors(13, ptBins_zpPb, raa_zpPb, ptSystXlow_zpPb,ptSystXhigh_zpPb,raaSyst_zpPb,raaSyst_zpPb);
+  pgRpa_z->SetName("pgRpa_z");   pgRpa_z->SetMarkerStyle(kFullCircle);
+  pgRpa_z->SetMarkerSize(1.);
+  pgRpa_z->SetMarkerStyle(22);
+
+  plots[6] = new TGraphErrors(*pgRpa_z);
 
   //systm error
-  pgRaaSyst_z->SetName("pgRaaSyst_z");
-  pgRaaSyst_z->SetFillColor(TColor::GetColor("#ff8888"));
+  pgRpaSyst_z->SetName("pgRpaSyst_z");
+  pgRpaSyst_z->SetFillColor(TColor::GetColor("#009999"));
 
-  systUnc[6] = new TGraphAsymmErrors(*pgRaaSyst_z);
-  systUnc[6]->SetTitle("Z Boson R_{AA} (0-100%) |y| < 2");
-  isPrelim[6] = true;
+  systUnc[6] = new TGraphAsymmErrors(*pgRpaSyst_z);
+  systUnc[6]->SetTitle("Z Boson R_{pA} (0-100%) |y| < 2");
   runPeriod[6] = 1;
 
 
@@ -520,6 +506,40 @@ void drawZoo(){
   systUnc[11]->SetTitle("c jet R_{pA}^{Pythia} |#eta_{CM}| < 2");
   isPrelim[11] = true;
   runPeriod[11] = 2;
+
+ //------------------------------------------- Z RAA (arXiv: 1410.4825v2, Z->ll)
+
+  //double ptBins_z[]   = {91.19};
+  double ptBins_z[7]   = {2.5,7.5,15,25,35,45,75};
+  //double ptError_z[]  = {0.0};
+  double ptError_z[7]  = {0.0};
+  
+  //double raa_z[]      = {1.06}; 
+  //double raaStat_z[]  = {0.05};
+  //double raaSyst_z[]  = {0.08};
+  //double ptSystXlow_z[]      = {4};
+  //double ptSystXhigh_z[]     = {4};
+  double raa_z[7]        = {0.99,1.29,0.93,1.27,1.18,1.28,0.89}; 
+  double raaStat_z[7]    = {0.09,0.14,0.10,0.20,0.31,0.40,0.28};
+  double raaSyst_z[7]    = {0.08,0.11,0.08,0.11,0.10,0.11,0.07};
+  double ptSystXlow_z[7] = {2.5,2.5,5,5,5,5,25};
+  double ptSystXhigh_z[7] = {2.5,2.5,5,5,5,5,25};
+
+  TGraphErrors *pgRaa_z          = new TGraphErrors(7, ptBins_z, raa_z, ptError_z, raaStat_z);
+  TGraphAsymmErrors *pgRaaSyst_z = new TGraphAsymmErrors(7, ptBins_z, raa_z, ptSystXlow_z,ptSystXhigh_z,raaSyst_z,raaSyst_z);
+  pgRaa_z->SetName("pgRaa_z");   pgRaa_z->SetMarkerStyle(kFullCircle);
+  pgRaa_z->SetMarkerSize(1.);
+  pgRaa_z->SetMarkerStyle(22);
+
+  plots[12] = new TGraphErrors(*pgRaa_z);
+
+  //systm error
+  pgRaaSyst_z->SetName("pgRpaSyst_z");
+  pgRaaSyst_z->SetFillColor(TColor::GetColor("#ff8888"));
+
+  systUnc[12] = new TGraphAsymmErrors(*pgRaaSyst_z);
+  systUnc[12]->SetTitle("Z Boson R_{AA} (0-100%) |y| < 2");
+  runPeriod[12] = 1;
 
   //--------------------------------------- Global uncertainties 
 
@@ -656,13 +676,13 @@ void drawZoo(){
   TLine *lineRight = new TLine(0,1,xMax2,1);
   lineRight->SetLineStyle(7);
 
-  TLatex *cmsLumi1 = new TLatex(49.24,yMax*1.01,"150 #mub^{-1} (PbPb 2.76 TeV)");
+  TLatex *cmsLumi1 = new TLatex(49.24,yMax*1.01,"166 #mub^{-1} (PbPb 2.76 TeV)");
   cmsLumi1->SetTextFont(43);
   cmsLumi1->SetTextSize(22);
   TLatex *cmsLumi2 = new TLatex(212.5,yMax*1.01,"35 nb^{-1} (pPb, 5.02 TeV)");
   cmsLumi2->SetTextFont(43);
   cmsLumi2->SetTextSize(25);
-  TLatex *cmsLumi3 = new TLatex(0.1,yMax*1.01,"150 #mub^{-1} (PbPb 2.76 TeV), 35 nb^{-1} (pPb, 5.02 TeV)");
+  TLatex *cmsLumi3 = new TLatex(0.01,yMax*1.01,"166 #mub^{-1} (PbPb 2.76 TeV), 35 nb^{-1} (pPb, 5.02 TeV)");
   cmsLumi3->SetTextFont(43);
   cmsLumi3->SetTextSize(22);
   TLatex *cmsLumi1_2 = (TLatex*)cmsLumi1->Clone();
@@ -697,22 +717,22 @@ void drawZoo(){
   }
   if(splitLegend) leg1->Draw("same");
   if(run1flag[1] && run2flag[1]){ 
-    cmsLumi3_2->SetX(0.01*xMax); 
-    cmsLumi3_2->Draw("same"); 
+    cmsLumi3->SetX(0.0*xMax); 
+    cmsLumi3->Draw("same"); 
     if(drawLumiUnc) PbPbLumi->Draw("same"); 
     if(drawLumiUnc) pPblumiErr->Draw("2,5,same");
     if(drawGlauberUnc) taaUncert->Draw("same");
     if(drawGlauberUnc) tpaUncert->Draw("same");
   }
   else if(run1flag[1]){ 
-    cmsLumi1_2->SetX(0.48*xMax); 
-    cmsLumi1_2->Draw("same"); 
+    cmsLumi1->SetX(0.48*xMax); 
+    cmsLumi1->Draw("same"); 
     if(drawLumiUnc) PbPbLumi->Draw("2,5,same");
     if(drawGlauberUnc) taaUncert->Draw("same");
   }
   else if(run2flag[1]){
-    cmsLumi2_2->SetX(0.45*xMax); 
-    cmsLumi2_2->Draw("same"); 
+    cmsLumi2->SetX(0.45*xMax); 
+    cmsLumi2->Draw("same"); 
     if(drawLumiUnc) pPblumiErr->Draw("2,5,same"); 
     if(drawGlauberUnc) tpaUncert->Draw("same");
   }
@@ -743,7 +763,7 @@ void drawZoo(){
       }
     }
     if(run1flag[1] && run2flag[1]){ 
-      cmsLumi3_2->SetX(0.01*xMax2); 
+      cmsLumi3_2->SetX(0.0*xMax2); 
       cmsLumi3_2->Draw("same"); 
       if(drawLumiUnc) PbPbLumi->Draw("same"); 
       if(drawLumiUnc) pPblumiErr->Draw("2,5,same");
