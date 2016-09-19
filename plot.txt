@@ -1,6 +1,2 @@
-PhotonRAA	BJetRAA
-WRAA		InclJetRAA
-HadronRAA	CJetRpA
-placeholder	BJetRpA
-
-
+BJetRAA
+InclJetRAA

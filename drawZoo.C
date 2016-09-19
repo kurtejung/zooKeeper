@@ -66,10 +66,10 @@ const bool splitLegend = true;
 
 //draw the global uncertainties?
 const bool drawLumiUnc = false;
-const bool drawGlauberUnc = false;
+const bool drawGlauberUnc = true;
 
 //redraw the points on top of all the systematic uncertainties?
-const bool redrawPoints = false;
+const bool redrawPoints = true;
 
 //**********************  END USER PARAMETERS ******************************//
 
@@ -646,27 +646,31 @@ void drawZoo(){
     }
   }
   TLegend *glauberLeg = new TLegend(0.2,0.588,0.5,0.665);
-  if(run1flag[1] && run2flag[1]){
+  glauberLeg->SetTextFont(42);
+  glauberLeg->SetTextSize(0.03);
+  if((run1flag[0] && run2flag[0]) || (run1flag[1] && run2flag[1]) ){
     glauberLeg->AddEntry(taaUncert, "T_{AA} Unc.","fl");
     glauberLeg->AddEntry(tpaUncert, "T_{pA} Unc.","fl");
   }
-  else if(run1flag[1]){ 
+  else if(run1flag[0] || run1flag[1]){ 
     glauberLeg->AddEntry(taaUncert, "T_{AA} Unc.","fl");
   }
-  else if(run2flag[1]){
+  else if(run2flag[0] || run2flag[1]){
     glauberLeg->AddEntry(tpaUncert, "T_{pA} Unc.","fl");
   }
 
   TLegend *lumiLeg = new TLegend(0.6,0.588,0.9,0.665);
-  if(run1flag[1] && run2flag[1]){
+  lumiLeg->SetTextFont(42);
+  lumiLeg->SetTextSize(0.03);
+  if((run1flag[0] && run2flag[0]) || (run1flag[1] && run2flag[1]) ){
     lumiLeg->AddEntry(PbPbLumi, "PbPb Lumi. Unc.","fl");
     lumiLeg->AddEntry(pPblumiErr, "pPb Lumi. Unc.","fl");
     if(leftFlags[10] || leftFlags[11] || rightFlags[10] || rightFlags[11]) lumiLeg->AddEntry(pythiaErr, "Pythia Unc.","fl"); 
   }
-  else if(run1flag[1]){ 
+  else if(run1flag[0] || run1flag[1]){ 
     lumiLeg->AddEntry(PbPbLumi, "PbPb Lumi. Unc.","fl");
   }
-  else if(run2flag[1]){
+  else if(run2flag[0] || run2flag[1]){
     lumiLeg->AddEntry(pPblumiErr, "pPb Lumi. Unc.","fl");
     if(leftFlags[10] || leftFlags[11] || rightFlags[10] || rightFlags[11]) lumiLeg->AddEntry(pythiaErr, "Pythia Unc.","fl"); 
   }
@@ -715,8 +719,9 @@ void drawZoo(){
       plots[iter]->Draw("P z same");
     }
   }
+
   if(splitLegend) leg1->Draw("same");
-  if(run1flag[1] && run2flag[1]){ 
+  if(run1flag[0] && run2flag[0]){ 
     cmsLumi3->SetX(0.0*xMax); 
     cmsLumi3->Draw("same"); 
     if(drawLumiUnc) PbPbLumi->Draw("same"); 
@@ -724,13 +729,13 @@ void drawZoo(){
     if(drawGlauberUnc) taaUncert->Draw("same");
     if(drawGlauberUnc) tpaUncert->Draw("same");
   }
-  else if(run1flag[1]){ 
+  else if(run1flag[0]){ 
     cmsLumi1->SetX(0.48*xMax); 
     cmsLumi1->Draw("same"); 
     if(drawLumiUnc) PbPbLumi->Draw("2,5,same");
     if(drawGlauberUnc) taaUncert->Draw("same");
   }
-  else if(run2flag[1]){
+  else if(run2flag[0]){
     cmsLumi2->SetX(0.45*xMax); 
     cmsLumi2->Draw("same"); 
     if(drawLumiUnc) pPblumiErr->Draw("2,5,same"); 
