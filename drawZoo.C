@@ -53,10 +53,10 @@ const string objectsToPlot[nObjects] = {"HadronRAA", "HadronRpA", "InclJetRpA", 
 const string inputList = "plot.txt";
 
 //set x-axis for left plot
-const double xMax = 100;
+const double xMax = 300;
 
 //set x-axis maximum for right plot;
-const double xMax2 = 400;
+const double xMax2 = 300;
 
 //set maximum for y-axis value
 const double yMax = 3;
@@ -69,7 +69,7 @@ const bool drawLumiUnc = false;
 const bool drawGlauberUnc = true;
 
 //redraw the points on top of all the systematic uncertainties?
-const bool redrawPoints = true;
+const bool redrawPoints = false;
 
 //**********************  END USER PARAMETERS ******************************//
 
@@ -78,7 +78,7 @@ void drawZoo(){
 
   bool debug = false;
 
-  ifstream instr(inputList);
+  std::ifstream instr(inputList.c_str());
   if(!instr){ cout << "ERROR! Cannot find " << inputList << endl; exit(0); }
   vector<string> leftPlot;
   vector<string> rightPlot;
@@ -299,7 +299,8 @@ void drawZoo(){
   //systm error
   pgRaaSyst_jet->SetName("pgRaaSyst_jet");
   pgRaaSyst_jet->SetFillStyle(1001);
-  pgRaaSyst_jet->SetFillColor(TColor::GetColor("#00FF60"));
+  pgRaaSyst_jet->SetFillColorAlpha(TColor::GetColor("#00FF60"),0.3);
+  pgRaaSyst_jet->SetLineColor(TColor::GetColor("#00FF60"));
 
   systUnc[3] = new TGraphAsymmErrors(*pgRaaSyst_jet);
   systUnc[3]->SetTitle("Inclusive jet  R_{AA}  (0-5%)  |#eta| < 2");
@@ -415,7 +416,7 @@ void drawZoo(){
   pgRaaSyst_w->SetFillColor(TColor::GetColor("#ff88ff"));
 
   systUnc[7] = new TGraphAsymmErrors(*pgRaaSyst_w);
-  systUnc[7]->SetTitle("W Boson R_{AA} (0-100%) p_{T}^{#mu} > 25 GeV/c, |#eta^{#mu}| < 2.1");
+  systUnc[7]->SetTitle("W R_{AA} (0-100%) p_{T}^{#mu} > 25 GeV/c, |#eta^{#mu}| < 2.1");
   runPeriod[7] = 1;
 
 
@@ -492,7 +493,7 @@ void drawZoo(){
 
    //------------------------------------------- C jet RpA (Prelim, 2015)
 
-  TFile *finc = new TFile("dataOverPythia_CJet_PRELIM.root");
+  TFile *finc = new TFile("dataOverPythia_CJet_Submitted.root");
   TH1D *cjetRpA = (TH1D*)finc->Get("hpARatio");
   TGraphErrors *pgRpASyst_cjet = (TGraphErrors*)finc->Get("systErrRatiopA");
   TGraphAsymmErrors *temp = new TGraphAsymmErrors(pgRpASyst_cjet->GetN(), pgRpASyst_cjet->GetX(), pgRpASyst_cjet->GetY(), pgRpASyst_cjet->GetEX(), pgRpASyst_cjet->GetEX(), pgRpASyst_cjet->GetEY(), pgRpASyst_cjet->GetEY());
@@ -503,8 +504,7 @@ void drawZoo(){
 
   plots[11] = new TGraphErrors(cjetRpA);
   systUnc[11] = new TGraphAsymmErrors(*temp);
-  systUnc[11]->SetTitle("c jet R_{pA}^{Pythia} |#eta_{CM}| < 2");
-  isPrelim[11] = true;
+  systUnc[11]->SetTitle("c jet R_{pA}  |#eta_{CM}| < 1.5");
   runPeriod[11] = 2;
 
  //------------------------------------------- Z RAA (arXiv: 1410.4825v2, Z->ll)
@@ -709,7 +709,7 @@ void drawZoo(){
   for(unsigned int i=0; i<plottingOrderLeft.size(); i++){
     int iter = plottingOrderLeft.at(i);
     if(debug) cout << "left plotting " << objectsToPlot[iter] << endl;
-    systUnc[iter]->Draw("2,same");
+    systUnc[iter]->Draw("2,5,same");
     plots[iter]->Draw("P z same");
     if(drawLumiUnc) if(iter==10 || iter==11) pythiaErr->Draw("2,5,Same");
   }
