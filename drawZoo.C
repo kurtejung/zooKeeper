@@ -41,9 +41,9 @@
 #include "TLine.h"
 
 using namespace std;
-const int nObjects = 13;
+const int nObjects = 15;
 //keywords for input list
-const string objectsToPlot[nObjects] = {"HadronRAA", "HadronRpA", "InclJetRpA", "InclJetRAA", "BJetRAA", "PhotonRAA", "ZRpA", "WRAA", "BJpsiRAA", "BMesonRpA", "BJetRpA", "CJetRpA", "ZRAA"};
+const string objectsToPlot[nObjects] = {"HadronRAA", "HadronRpA", "InclJetRpA", "InclJetRAA", "BJetRAA", "PhotonRAA", "ZRpA", "WRAA", "BJpsiRAA", "BMesonRpA", "BJetRpA", "CJetRpA", "ZRAA","PromptBJpsiRpA","NonPromptBJpsiRpA"};
 
 
 //**********************  USER PARAMETERS ******************************//
@@ -104,7 +104,7 @@ void drawZoo(){
   }
 
   TGraphAsymmErrors *systUnc[nObjects];
-  TGraphErrors *plots[nObjects];
+  TGraphAsymmErrors *plots[nObjects];
   int runPeriod[nObjects]; // 1 = 2.76 TeV PbPb, 2 = 5.02 TeV pPb, 3 = 5.02 TeV PbPb
   bool isPrelim[nObjects];
   for(int i=0; i<nObjects; i++){
@@ -151,13 +151,13 @@ void drawZoo(){
   inData_h.close();
   // done reading numebrs
   
-  TGraphErrors *pgRaa_h          = new TGraphErrors(27, ptBins_h, raa_h, ptError_h, raaStat_h);
+  TGraphAsymmErrors *pgRaa_h          = new TGraphAsymmErrors(27, ptBins_h, raa_h, ptError_h, ptError_h, raaStat_h, raaStat_h);
   TGraphAsymmErrors *pgRaaSyst_h = new TGraphAsymmErrors(27, ptBins_h, raa_h, ptSystXlow_h,ptSystXhigh_h,raaSyst_h,raaSyst_h);
   pgRaa_h->SetName("pgRaa_h");
   pgRaa_h->SetMarkerStyle(20);
   pgRaa_h->SetMarkerSize(1.);
 
-  plots[0] = new TGraphErrors(*pgRaa_h);
+  plots[0] = new TGraphAsymmErrors(*pgRaa_h);
   
   //systm error
   pgRaaSyst_h->SetName("pgRaaSyst_h");
@@ -205,13 +205,13 @@ void drawZoo(){
   inData_hp.close();
   // done reading numebrs
 
-  TGraphErrors *pgRaa_hp          = new TGraphErrors(33, ptBins_hp, raa_hp, ptError_hp, raaStat_hp);
+  TGraphAsymmErrors *pgRaa_hp          = new TGraphAsymmErrors(33, ptBins_hp, raa_hp, ptError_hp, ptError_hp, raaStat_hp, raaStat_hp);
   TGraphAsymmErrors *pgRaaSyst_hp = new TGraphAsymmErrors(33, ptBins_hp, raa_hp, ptSystXlow_hp,ptSystXhigh_hp,raaSyst_hp,raaSyst_hp);
   pgRaa_hp->SetName("pgRaa_hp");
   pgRaa_hp->SetMarkerStyle(21);
   pgRaa_hp->SetMarkerSize(1.);
 
-  plots[1] = new TGraphErrors(*pgRaa_hp);
+  plots[1] = new TGraphAsymmErrors(*pgRaa_hp);
 
   //systm error
   pgRaaSyst_hp->SetName("pgRaaSyst_hp");
@@ -262,14 +262,14 @@ void drawZoo(){
   inData_jp.close();
   // done reading numebrs
 
-  TGraphErrors *pgRaa_jp          = new TGraphErrors(19, ptBins_jp, raa_jp, ptError_jp, raaStat_jp);
+  TGraphAsymmErrors *pgRaa_jp          = new TGraphAsymmErrors(19, ptBins_jp, raa_jp, ptError_jp, ptError_jp, raaStat_jp, raaStat_jp);
   TGraphAsymmErrors *pgRaaSyst_jp = new TGraphAsymmErrors(19, ptBins_jp, raa_jp, ptSystXlow_jp,ptSystXhigh_jp,raaSyst2_jp,raaSyst2_jp);
   TGraphAsymmErrors *pgRaaSyst2_jp = new TGraphAsymmErrors(19, ptBins_jp, raa_jp, ptSystXlow_jp,ptSystXhigh_jp,raaSyst_jp,raaSyst_jp);
   pgRaa_jp->SetName("pgRaa_jp");
   pgRaa_jp->SetMarkerStyle(34);
   pgRaa_jp->SetMarkerSize(1.2);
 
-  plots[2] = new TGraphErrors(*pgRaa_jp);
+  plots[2] = new TGraphAsymmErrors(*pgRaa_jp);
 
   //systm error
   pgRaaSyst_jp->SetName("pgRaaSyst_jp");
@@ -294,7 +294,7 @@ void drawZoo(){
   pgRaa_jet->SetMarkerStyle(33);
   pgRaa_jet->SetMarkerSize(1.4);
 
-  plots[3] = new TGraphErrors(pgRaa_jet->GetN(), pgRaa_jet->GetX(), pgRaa_jet->GetY(), pgRaa_jet->GetEX(), pgRaa_jet->GetEY());
+  plots[3] = new TGraphAsymmErrors(pgRaa_jet->GetN(), pgRaa_jet->GetX(), pgRaa_jet->GetY(), pgRaa_jet->GetEX(), pgRaa_jet->GetEX(), pgRaa_jet->GetEY(), pgRaa_jet->GetEY());
   
   //systm error
   pgRaaSyst_jet->SetName("pgRaaSyst_jet");
@@ -319,14 +319,14 @@ void drawZoo(){
   double ptSystXlow_bjet[5]      = {5,10,10,20,40};
   double ptSystXhigh_bjet[5]     = {5,10,10,20,40};
   
-  TGraphErrors *pgRaa_bjet          = new TGraphErrors(5, ptBins_bjet, raa_bjet, ptError_bjet, raaStat_bjet);
+  TGraphAsymmErrors *pgRaa_bjet          = new TGraphAsymmErrors(5, ptBins_bjet, raa_bjet, ptError_bjet, ptError_bjet, raaStat_bjet,raaStat_bjet);
   TGraphAsymmErrors *pgRaaSyst_bjet = new TGraphAsymmErrors(5, ptBins_bjet, raa_bjet, ptSystXlow_bjet,ptSystXhigh_bjet,raaSyst_bjet,raaSyst_bjet);
   pgRaa_bjet->SetName("pgRaa_bjet");
   pgRaa_bjet->SetMarkerStyle(21);
   pgRaa_bjet->SetMarkerColor(kRed);
   pgRaa_bjet->SetMarkerSize(1.);
 
-  plots[4] = new TGraphErrors(*pgRaa_bjet);
+  plots[4] = new TGraphAsymmErrors(*pgRaa_bjet);
   
   //systm error
   pgRaaSyst_bjet->SetName("pgRaaSyst_bjet");
@@ -347,13 +347,13 @@ void drawZoo(){
   double ptSystXlow_photon[]      = {2.5, 2.5, 5, 5, 15};
   double ptSystXhigh_photon[]     = {2.5, 2.5, 5, 5, 15};
   
-  TGraphErrors *pgRaa_photon          = new TGraphErrors(5, ptBins_photon, raa_photon, ptError_photon, raaStat_photon);
+  TGraphAsymmErrors *pgRaa_photon          = new TGraphAsymmErrors(5, ptBins_photon, raa_photon, ptError_photon, ptError_photon, raaStat_photon, raaStat_photon);
   TGraphAsymmErrors *pgRaaSyst_photon = new TGraphAsymmErrors(5, ptBins_photon, raa_photon, ptSystXlow_photon,ptSystXhigh_photon,raaSyst_photon,raaSyst_photon);
   pgRaa_photon->SetName("pgRaa_photon");
   pgRaa_photon->SetMarkerStyle(23);
   pgRaa_photon->SetMarkerSize(1.);
 
-  plots[5] = new TGraphErrors(*pgRaa_photon);
+  plots[5] = new TGraphAsymmErrors(*pgRaa_photon);
 
   //systm error
   pgRaaSyst_photon->SetName("pgRaaSyst_photon");
@@ -375,13 +375,13 @@ void drawZoo(){
   double ptSystXlow_zpPb[13] = {1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 2.5, 5, 5, 5, 10, 15, 25};
   double ptSystXhigh_zpPb[13] = {1.25, 1.25, 1.25, 1.25, 1.25, 1.25, 2.5, 5, 5, 5, 10, 15, 25};
 
-  TGraphErrors *pgRpa_z          = new TGraphErrors(13, ptBins_zpPb, raa_zpPb, ptError_zpPb, raaStat_zpPb);
+  TGraphAsymmErrors *pgRpa_z          = new TGraphAsymmErrors(13, ptBins_zpPb, raa_zpPb, ptError_zpPb, ptError_zpPb, raaStat_zpPb, raaStat_zpPb);
   TGraphAsymmErrors *pgRpaSyst_z = new TGraphAsymmErrors(13, ptBins_zpPb, raa_zpPb, ptSystXlow_zpPb,ptSystXhigh_zpPb,raaSyst_zpPb,raaSyst_zpPb);
   pgRpa_z->SetName("pgRpa_z");   pgRpa_z->SetMarkerStyle(kFullCircle);
   pgRpa_z->SetMarkerSize(1.);
   pgRpa_z->SetMarkerStyle(22);
 
-  plots[6] = new TGraphErrors(*pgRpa_z);
+  plots[6] = new TGraphAsymmErrors(*pgRpa_z);
 
   //systm error
   pgRpaSyst_z->SetName("pgRpaSyst_z");
@@ -402,14 +402,14 @@ void drawZoo(){
   double ptSystXlow_w[]      = {4};
   double ptSystXhigh_w[]     = {4};
 
-  TGraphErrors *pgRaa_w          = new TGraphErrors(1, ptBins_w, raa_w, ptError_w, raaStat_w);
+  TGraphAsymmErrors *pgRaa_w          = new TGraphAsymmErrors(1, ptBins_w, raa_w, ptError_w, ptError_w, raaStat_w, raaStat_w);
   TGraphAsymmErrors *pgRaaSyst_w = new TGraphAsymmErrors(1, ptBins_w, raa_w, ptSystXlow_w,ptSystXhigh_w,raaSyst_w,raaSyst_w);
   pgRaa_w->SetName("pgRaa_w");
   pgRaa_w->SetMarkerStyle(kFullCircle);
   pgRaa_w->SetMarkerSize(1.);
   pgRaa_w->SetMarkerStyle(21);
 
-  plots[7] = new TGraphErrors(*pgRaa_w);
+  plots[7] = new TGraphAsymmErrors(*pgRaa_w);
   
   //systm error
   pgRaaSyst_w->SetName("pgRaaSyst_w");
@@ -431,14 +431,14 @@ void drawZoo(){
   double ptSystXlow_npjpsi[]      = {0.81, 0.97, 1.32, 3.52};
   double ptSystXhigh_npjpsi[]     = {0.69, 1.03, 1.68, 13.48};
 
-  TGraphErrors *pgRaa_npjpsi          = new TGraphErrors(4, ptBins_npjpsi, raa_npjpsi, ptError_npjpsi, raaStat_npjpsi);
+  TGraphAsymmErrors *pgRaa_npjpsi          = new TGraphAsymmErrors(4, ptBins_npjpsi, raa_npjpsi, ptError_npjpsi, ptError_npjpsi, raaStat_npjpsi, raaStat_npjpsi);
   TGraphAsymmErrors *pgRaaSyst_npjpsi = new TGraphAsymmErrors(4, ptBins_npjpsi, raa_npjpsi, ptSystXlow_npjpsi,ptSystXhigh_npjpsi,raaSyst_npjpsi,raaSyst_npjpsi);
   pgRaa_npjpsi->SetName("pgRaa_npjpsi");
   pgRaa_npjpsi->SetMarkerStyle(29);
   pgRaa_npjpsi->SetMarkerSize(1.2);
   pgRaa_npjpsi->SetMarkerColor(kRed);
 
-  plots[8] = (TGraphErrors*)(pgRaa_npjpsi->Clone(pgRaa_npjpsi->GetName()));
+  plots[8] = (TGraphAsymmErrors*)(pgRaa_npjpsi->Clone(pgRaa_npjpsi->GetName()));
   
   //systm error
   pgRaaSyst_npjpsi->SetName("pgRaaSyst_npjpsi");
@@ -457,14 +457,14 @@ void drawZoo(){
   double raaStat_bMeson[] = {0.08,0.1,0.12,0.18,0.19};
   double raaSyst_bMeson[] = {0.17,0.17,0.13,0.12,0.17};
 
-  TGraphErrors *pgRaa_bMeson = new TGraphErrors(5, ptBins_bMeson, 
-    raa_bMeson, ptError_bMeson, raaStat_bMeson);
+  TGraphAsymmErrors *pgRaa_bMeson = new TGraphAsymmErrors(5, ptBins_bMeson, 
+    raa_bMeson, ptError_bMeson, ptError_bMeson, raaStat_bMeson, raaStat_bMeson);
   TGraphAsymmErrors *pgRaaSyst_bMeson = new TGraphAsymmErrors(5, ptBins_bMeson,
     raa_bMeson, ptError_bMeson, ptError_bMeson, raaSyst_bMeson, raaSyst_bMeson);
   pgRaa_bMeson->SetMarkerStyle(20);
   pgRaaSyst_bMeson->SetFillColor(kGreen+2);
 
-  plots[9] = new TGraphErrors(*pgRaa_bMeson);
+  plots[9] = new TGraphAsymmErrors(*pgRaa_bMeson);
   systUnc[9] = new TGraphAsymmErrors(*pgRaaSyst_bMeson);
   systUnc[9]->SetTitle("B^{+} Meson R_{pA} |#eta| < 2");
   isPrelim[9] = true;
@@ -486,7 +486,7 @@ void drawZoo(){
   pgRpASyst_bjet->SetMarkerStyle(20);
   pgRpASyst_bjet->SetFillColor(kCyan-7);
 
-  plots[10] = new TGraphErrors(bjetRpA);
+  plots[10] = new TGraphAsymmErrors(bjetRpA);
   systUnc[10] = new TGraphAsymmErrors(*pgRpASyst_bjet);
   systUnc[10]->SetTitle("b jet R_{pA}^{Pythia} |#eta_{CM}| < 2");
   runPeriod[10] = 2;
@@ -502,7 +502,7 @@ void drawZoo(){
   temp->SetMarkerStyle(25);
   temp->SetFillColor(kMagenta-4);
 
-  plots[11] = new TGraphErrors(cjetRpA);
+  plots[11] = new TGraphAsymmErrors(cjetRpA);
   systUnc[11] = new TGraphAsymmErrors(*temp);
   systUnc[11]->SetTitle("c jet R_{pA}  |#eta_{CM}| < 1.5");
   runPeriod[11] = 2;
@@ -525,13 +525,13 @@ void drawZoo(){
   double ptSystXlow_z[7] = {2.5,2.5,5,5,5,5,25};
   double ptSystXhigh_z[7] = {2.5,2.5,5,5,5,5,25};
 
-  TGraphErrors *pgRaa_z          = new TGraphErrors(7, ptBins_z, raa_z, ptError_z, raaStat_z);
+  TGraphAsymmErrors *pgRaa_z          = new TGraphAsymmErrors(7, ptBins_z, raa_z, ptError_z, ptError_z, raaStat_z, raaStat_z);
   TGraphAsymmErrors *pgRaaSyst_z = new TGraphAsymmErrors(7, ptBins_z, raa_z, ptSystXlow_z,ptSystXhigh_z,raaSyst_z,raaSyst_z);
   pgRaa_z->SetName("pgRaa_z");   pgRaa_z->SetMarkerStyle(kFullCircle);
   pgRaa_z->SetMarkerSize(1.);
   pgRaa_z->SetMarkerStyle(22);
 
-  plots[12] = new TGraphErrors(*pgRaa_z);
+  plots[12] = new TGraphAsymmErrors(*pgRaa_z);
 
   //systm error
   pgRaaSyst_z->SetName("pgRpaSyst_z");
@@ -540,6 +540,43 @@ void drawZoo(){
   systUnc[12] = new TGraphAsymmErrors(*pgRaaSyst_z);
   systUnc[12]->SetTitle("Z Boson R_{AA} (0-100%) |y| < 2");
   runPeriod[12] = 1;
+  
+  //------------------------------------------- Prompt B->Jpsi RpA (HIN-14-009, Final, 2017)
+  TFile *fbjpsi = new TFile("RpPb_rap1p93_promptJpsi.root");
+  TGraphAsymmErrors *pgBjpsiPromptRpA = (TGraphAsymmErrors*)fbjpsi->Get("g_RpPb");
+  TGraphAsymmErrors *pgBjpsiPromptRpA_syst = (TGraphAsymmErrors*)fbjpsi->Get("g_RpPb_sys");
+  pgBjpsiPromptRpA->SetName("pgRaa_z");
+  pgBjpsiPromptRpA->SetMarkerSize(1.);
+  pgBjpsiPromptRpA->SetMarkerStyle(24);
+
+  plots[13] = new TGraphAsymmErrors(*pgBjpsiPromptRpA);
+
+  //systm error
+  pgBjpsiPromptRpA_syst->SetName("pgBjpsiPromptRpA_syst");
+  pgBjpsiPromptRpA_syst->SetFillColor(TColor::GetColor("#ff8888"));
+
+  systUnc[13] = new TGraphAsymmErrors(*pgBjpsiPromptRpA_syst);
+  systUnc[13]->SetTitle("Prompt B #rightarrow J#psi R_{pA}, |y_{CM}| < 1.93");
+  runPeriod[13] = 2;
+
+  //------------------------------------------- Non-Prompt B->Jpsi RpA (HIN-14-009, Final, 2017)
+  TFile *fbjpsiNP = new TFile("RpPb_rap1p93_nonpromptJpsi.root");
+  TGraphAsymmErrors *pgBjpsiNPRpA = (TGraphAsymmErrors*)fbjpsiNP->Get("g_RpPb");
+  TGraphAsymmErrors *pgBjpsiNPRpA_syst = (TGraphAsymmErrors*)fbjpsiNP->Get("g_RpPb_sys");
+  pgBjpsiNPRpA->SetName("pgRaa_z");   pgBjpsiPromptRpA->SetMarkerStyle(kFullCircle);
+  pgBjpsiNPRpA->SetMarkerSize(1.);
+  pgBjpsiNPRpA->SetMarkerStyle(24);
+
+  plots[14] = new TGraphAsymmErrors(*pgBjpsiNPRpA);
+
+  //systm error
+  pgBjpsiNPRpA_syst->SetName("pgBjpsiNPRpA_syst");
+  pgBjpsiNPRpA_syst->SetFillColor(TColor::GetColor("#ff8888"));
+
+  systUnc[14] = new TGraphAsymmErrors(*pgBjpsiNPRpA_syst);
+  systUnc[14]->SetTitle("Non-Prompt B #rightarrow J#psi R_{pA}, |y_{CM}| < 1.93");
+  runPeriod[14] = 2;
+  
 
   //--------------------------------------- Global uncertainties 
 
@@ -561,12 +598,12 @@ void drawZoo(){
   PbPbLumi->SetFillStyle(1001);
 
   //TAA uncertainty
-  TBox *taaUncert = new TBox(3,1-0.0726,6,1.0726);
+  TBox *taaUncert = new TBox(0.01*xMax,1-0.0726,0.01*xMax*2,1.0726);
   taaUncert->SetFillColor(kBlue-7);
   taaUncert->SetLineColor(kBlue-7);
 
       //TpA uncertainty
-  TBox *tpaUncert = new TBox(10,1-0.035,14,1.035);
+  TBox *tpaUncert = new TBox(0.01*xMax*3,1-0.042,0.01*xMax*4,1.042); //pp(+)pPb glauber
   tpaUncert->SetFillColor(kGreen-7);
   tpaUncert->SetLineColor(kGreen-7);
 
