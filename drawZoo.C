@@ -43,7 +43,7 @@
 using namespace std;
 const int nObjects = 15;
 //keywords for input list
-const string objectsToPlot[nObjects] = {"HadronRAA", "HadronRpA", "InclJetRpA", "InclJetRAA", "BJetRAA", "PhotonRAA", "ZRpA", "WRAA", "BJpsiRAA", "BMesonRpA", "BJetRpA", "CJetRpA", "ZRAA","PromptBJpsiRpA","NonPromptBJpsiRpA"};
+const string objectsToPlot[nObjects] = {"HadronRAA", "HadronRpA", "InclJetRpA", "InclJetRAA", "BJetRAA", "PhotonRAA", "ZRpA", "WRAA", "BJpsiRAA", "BMesonRpA", "BJetRpA", "CJetRpA", "ZRAA","PromptJpsiRpA","BJpsiRpA"};
 
 
 //**********************  USER PARAMETERS ******************************//
