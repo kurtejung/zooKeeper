@@ -53,7 +53,7 @@ const string objectsToPlot[nObjects] = {"HadronRAA", "HadronRpA", "InclJetRpA", 
 const string inputList = "plot.txt";
 
 //set x-axis for left plot
-const double xMax = 300;
+const double xMax = 400;
 
 //set x-axis maximum for right plot;
 const double xMax2 = 300;
@@ -65,7 +65,7 @@ const double yMax = 3;
 const bool splitLegend = true;
 
 //draw the global uncertainties?
-const bool drawLumiUnc = false;
+const bool drawLumiUnc = true;
 const bool drawGlauberUnc = true;
 
 //redraw the points on top of all the systematic uncertainties?
@@ -223,48 +223,24 @@ void drawZoo(){
   runPeriod[1] = 2;
 
 
-//----------------------------------------- jets (RpA)
-  double ptBins_jp[19]={0};
-  double ptError_jp[19]={0};
+//----------------------------------------- jets (RpA) updated final (arXiv: 1601.02001)
+  double ptBins_jp[19]={56, 64, 74, 84, 97, 114, 133, 153, 174, 196, 220, 245, 272, 300, 330, 362, 395, 430, 468};
+  double ptError_jp[18];
+  double ptBinsForGraph_jp[18];
+  for(int i=0; i<18; i++){ ptError_jp[i] = (ptBins_jp[i+1]-ptBins_jp[i])/2.; ptBinsForGraph_jp[i] = (ptBins_jp[i+1]+ptBins_jp[i])/2.; }
 
-  double raa_jp[19];
-  double raaStat_jp[19];
-  double raaSyst_jp[19];
-  double raaSyst2_jp[19];
+  double rpa_jp[18] = {1.169332, 1.166589, 1.176224, 1.189967, 1.182953, 1.171439, 1.140764, 1.132264, 1.163812, 1.142694, 1.119479, 1.057972, 1.044304, 1.071367, 0.9779497, 1.125358, 1.134974, 0.8887088};
+  double raaStat_jp[18] = {0.004292592, 0.004294137, 0.003191035, 0.002698143, 0.002781638, 0.003644129, 0.005085802, 0.007494719, 0.009860672, 0.01330387, 0.01767306, 0.02228289, 0.02944597, 0.0398681, 0.04758678, 0.07103156, 0.09213056, 0.09655129};
+  
+  double raaValsHigh_jp[18] = {1.273021, 1.265406, 1.272089, 1.283475, 1.272585, 1.257685, 1.223192, 1.213589, 1.247845, 1.226663, 1.204084, 1.140624, 1.128027, 1.158679, 1.057649, 1.21707, 1.227469, 0.9611349};
+  double raaValsLow_jp[18] = {1.065643, 1.067771, 1.080358, 1.096459, 1.093321, 1.085193, 1.058337, 1.05094, 1.079779, 1.058725, 1.034874, 0.9753196, 0.9605801, 0.9840549, 0.8982509, 1.033646, 1.042478, 0.8162827};
+  double ptSystXlow_jp[18];
+  double ptSystXhigh_jp[18];
+  
+  for(int i=0; i<18; i++){ ptSystXlow_jp[i] = rpa_jp[i] - raaValsLow_jp[i]; ptSystXhigh_jp[i] = raaValsHigh_jp[i] - rpa_jp[i]; }
 
-  double ptSystXlow_jp[19];
-  double ptSystXhigh_jp[19];
-
-  // reading numbers
-  ifstream inData_jp;
-  TString inFilejp("rpa_j.dat");
-  inData_jp.open(inFilejp);
-  if(inData_jp.fail()) {
-    cerr << "unable to open file rpa_j.dat for reading" << endl;
-    exit(1);
-  }
-  j=0;
-  while(!inData_jp.eof())
-  {
-    inData_jp >> xx_low >> xx_high >> raa >> raa_syst >> raa_stat >> raa_stat2;
-    if( xx_low < 30. ) continue;
-    ptBins_jp[j]   = xx_low+ (xx_high-xx_low)/2;
-    raa_jp[j]      = raa;
-    raaStat_jp[j]  = raa_syst;
-    raaSyst_jp[j]  = raa_stat/100.*raa;
-    raaSyst2_jp[j]  =  raa_stat2/100.*raa; //sqrt( raa_stat*raa_stat + raa_stat2*raa_stat2)/100.* raa;
-
-    ptSystXlow_jp[j] = (xx_high-xx_low)/2;
-    ptSystXhigh_jp[j]= (xx_high-xx_low)/2;
-    // cout<<"pT"<<ptBins_h[j]<<"\t raa= "<<raa_h[j]<<"\t syst= "<<raaStat_h[j]<<"\t stat ="<<raaSyst_h[j]<<"\t x_low= "<<ptSystXlow_h[j]<<"\t high= "<<ptSystXhigh_h[j]<<endl;
-    j++;
-  }
-  inData_jp.close();
-  // done reading numebrs
-
-  TGraphAsymmErrors *pgRaa_jp          = new TGraphAsymmErrors(19, ptBins_jp, raa_jp, ptError_jp, ptError_jp, raaStat_jp, raaStat_jp);
-  TGraphAsymmErrors *pgRaaSyst_jp = new TGraphAsymmErrors(19, ptBins_jp, raa_jp, ptSystXlow_jp,ptSystXhigh_jp,raaSyst2_jp,raaSyst2_jp);
-  TGraphAsymmErrors *pgRaaSyst2_jp = new TGraphAsymmErrors(19, ptBins_jp, raa_jp, ptSystXlow_jp,ptSystXhigh_jp,raaSyst_jp,raaSyst_jp);
+  TGraphAsymmErrors *pgRaa_jp          = new TGraphAsymmErrors(18, ptBinsForGraph_jp, rpa_jp, ptError_jp, ptError_jp, raaStat_jp, raaStat_jp);
+  TGraphAsymmErrors *pgRaaSyst_jp = new TGraphAsymmErrors(18, ptBinsForGraph_jp, rpa_jp, ptError_jp, ptError_jp, ptSystXlow_jp, ptSystXhigh_jp);
   pgRaa_jp->SetName("pgRaa_jp");
   pgRaa_jp->SetMarkerStyle(34);
   pgRaa_jp->SetMarkerSize(1.2);
@@ -274,15 +250,10 @@ void drawZoo(){
   //systm error
   pgRaaSyst_jp->SetName("pgRaaSyst_jp");
   pgRaaSyst_jp->SetFillColor(TColor::GetColor("#FFBF00"));
-  pgRaaSyst2_jp->SetName("pgRaaSyst2_jp");
-  pgRaaSyst2_jp->SetFillColor(TColor::GetColor("#FFBF00"));
-  //pgRaaSyst2_jp->SetFillStyle(1);
-  pgRaaSyst2_jp->SetLineWidth(1);
-  //pgRaaSyst2_jp->SetFillStyle(3001);
 
   systUnc[2] = new TGraphAsymmErrors(*pgRaaSyst_jp);
-  systUnc[2]->SetTitle("Inclusive jet  R_{pA} |#eta_{CM}| < 0.5");
-  isPrelim[2] = true;
+  systUnc[2]->SetTitle("Inclusive jet  R*_{#kern[-0.3]{pPb}} |#eta_{CM}| < 0.5");
+  //isPrelim[2] = true;
   runPeriod[2] = 2;
 
   //----------------------------------------- jet RAA
@@ -702,14 +673,14 @@ void drawZoo(){
   if((run1flag[0] && run2flag[0]) || (run1flag[1] && run2flag[1]) ){
     lumiLeg->AddEntry(PbPbLumi, "PbPb Lumi. Unc.","fl");
     lumiLeg->AddEntry(pPblumiErr, "pPb Lumi. Unc.","fl");
-    if(leftFlags[10] || leftFlags[11] || rightFlags[10] || rightFlags[11]) lumiLeg->AddEntry(pythiaErr, "Pythia Unc.","fl"); 
+    if(leftFlags[10] || rightFlags[10]) lumiLeg->AddEntry(pythiaErr, "Pythia Unc.","fl"); 
   }
   else if(run1flag[0] || run1flag[1]){ 
     lumiLeg->AddEntry(PbPbLumi, "PbPb Lumi. Unc.","fl");
   }
   else if(run2flag[0] || run2flag[1]){
     lumiLeg->AddEntry(pPblumiErr, "pPb Lumi. Unc.","fl");
-    if(leftFlags[10] || leftFlags[11] || rightFlags[10] || rightFlags[11]) lumiLeg->AddEntry(pythiaErr, "Pythia Unc.","fl"); 
+    if(leftFlags[10] || rightFlags[10]) lumiLeg->AddEntry(pythiaErr, "Pythia Unc.","fl"); 
   }
 
   TLine *lineLeft = new TLine(0,1,xMax,1);
